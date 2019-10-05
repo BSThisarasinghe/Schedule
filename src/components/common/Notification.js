@@ -2,7 +2,9 @@ import React, { Component } from 'react';
 import { View, Text, TouchableOpacity, Image, Alert } from 'react-native';
 import ModalDropdown from 'react-native-modal-dropdown';
 import { StackNavigator } from 'react-navigation';
+import firebase from 'firebase';
 import { Spinner } from './Spinner';
+
 
 class Notification extends Component {
     state = {
@@ -15,13 +17,13 @@ class Notification extends Component {
     onSelectOpt(idx, value) {
         this.setState({ level: value });
         if (value === "Logout") {
-            { this.goBack() }
+            firebase.auth().signOut();
         }
     }
 
-    goBack() {
-        this.props.logOutUser();
-    }
+    // goBack() {
+    //     this.props.logOutUser();
+    // }
 
     showLogout() {
         return (

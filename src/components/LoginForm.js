@@ -8,6 +8,12 @@ import { emailChanged, passwordChanged, loginUser } from '../actions';
 import { Card, CardSection, Input, Button, Spinner } from './common';
 
 class LoginForm extends Component {
+
+    constructor(props) {
+        super(props);
+        this.state = { email: '', password: '' };
+    }
+
     onEmailChange(text) {
         this.props.emailChanged(text);
     }
@@ -17,7 +23,7 @@ class LoginForm extends Component {
     }
 
     onLogin() {
-        const { email, password, user } = this.props;
+        const { email, password } = this.state;
 
         this.props.loginUser({ email, password });
         // console.log(user);
@@ -66,8 +72,8 @@ class LoginForm extends Component {
                     <Input
                         label="Email"
                         placeholder="email@gmail.com"
-                        onChangeText={this.onEmailChange.bind(this)}
-                        value={this.props.email}
+                        onChangeText={email => this.setState({ email })}
+                        value={this.state.email}
                         secureTextEntry={false}
                     />
                 </CardSection>
@@ -76,8 +82,8 @@ class LoginForm extends Component {
                         secureTextEntry={true}
                         label="Password"
                         placeholder="Password"
-                        onChangeText={this.onPasswordChange.bind(this)}
-                        value={this.props.password}
+                        onChangeText={password => this.setState({ password })}
+                        value={this.state.password}
                     />
                 </CardSection>
                 <Text style={styles.errorTextStyle}>

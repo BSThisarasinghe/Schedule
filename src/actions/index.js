@@ -52,20 +52,24 @@ const loginUserSuccess = (dispatch, user) => {
 
 export const logOutUser = () => {
     return (dispatch) => {
-        firebase.auth().signOut()
-            .then(() => logoutUserSuccess(dispatch))
-            .catch(() => logoutUserFail(dispatch));
+        firebase.auth().signOut().then(() => console.log(dispatch))
+        .catch(function (error) {
+            // An error happened.
+            // dispatch({
+            //     type: SIGN_OUT_FAIL
+            // });
+        });
     }
 };
 
-const logoutUserSuccess = (dispatch) => {
-    dispatch({
-        type: SIGN_OUT
-    });
-};
+// const logoutUserSuccess = (dispatch) => {
+//     dispatch({
+//         type: SIGN_OUT
+//     });
+// };
 
-const logoutUserFail = (dispatch) => {
-    dispatch({
-        type: SIGN_OUT_FAIL
-    });
-};
+// const logoutUserFail = (dispatch) => {
+//     dispatch({
+//         type: SIGN_OUT_FAIL
+//     });
+// };

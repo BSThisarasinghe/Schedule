@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Text, View, BackHandler } from 'react-native';
 import { connect } from 'react-redux';
+import firebase from 'firebase';
 import { createAppContainer } from 'react-navigation';
 import { createDrawerNavigator, DrawerActions } from 'react-navigation-drawer';
 import { createStackNavigator } from 'react-navigation-stack';
@@ -23,8 +24,8 @@ class TaskList extends Component {
   }
 
   UNSAFE_componentWillReceiveProps(nextProps) {
-    console.log(nextProps.user);
-    if (nextProps.user == null) {
+    // console.log(firebase.auth().currentUser);
+    if (firebase.auth().currentUser == null) {
       this.props.navigation.navigate('Home');
     }
   }
@@ -32,9 +33,6 @@ class TaskList extends Component {
   render() {
     return (
       <View>
-        <Text style={styles.errorTextStyle}>
-          {this.props.error}
-        </Text>
         <Text>Employee</Text>
         <Text>Employee</Text>
         <Text>Employee</Text>
