@@ -6,7 +6,10 @@ import {
     LOGIN_USER_FAIL,
     LOGIN_USER,
     SIGN_OUT,
-    SIGN_OUT_FAIL
+    SIGN_OUT_FAIL,
+    REGISTER_USER_FAIL,
+    PASSWORD_FAIL,
+    REGISTER_USER_SUCCESS
 } from './types';
 
 export const emailChanged = (text) => {
@@ -23,6 +26,42 @@ export const passwordChanged = (text) => {
     }
 };
 
+export const registerUser = ({ name, email, password, cpwd }) => {
+    return (dispatch) => {
+        dispatch({
+            type: LOGIN_USER
+        });
+
+        if (password === cpwd) {
+            firebase.auth().createUserWithEmailAndPassword(email, password)
+                .then(user => {
+                    const { currentUser } = firebase.auth();
+                    firebase.database().ref(`users/${currentUser.uid}/`)
+                        .push({ name });
+                    registerUserSuccess(dispatch, currentUser);
+                })
+                .catch(() => registerUserFail(dispatch));
+        } else {
+            passwordFail(dispatch);
+        }
+    }
+};
+
+const registerUserSuccess = (dispatch, currentUser) => {
+    dispatch({
+        type: REGISTER_USER_SUCCESS,
+        payload: currentUser
+    });
+};
+
+const registerUserFail = (dispatch) => {
+    dispatch({ type: REGISTER_USER_FAIL });
+};
+
+const passwordFail = (dispatch) => {
+    dispatch({ type: PASSWORD_FAIL });
+};
+
 export const loginUser = ({ email, password }) => {
     return (dispatch) => {
         dispatch({
@@ -31,11 +70,7 @@ export const loginUser = ({ email, password }) => {
 
         firebase.auth().signInWithEmailAndPassword(email, password)
             .then(user => loginUserSuccess(dispatch, user))
-            .catch(() => {
-                firebase.auth().createUserWithEmailAndPassword(email, password)
-                    .then(user => loginUserSuccess(dispatch, user))
-                    .catch(() => loginUserFail(dispatch));
-            });
+            .catch(() => loginUserFail(dispatch));
     }
 };
 
@@ -52,24 +87,32 @@ const loginUserSuccess = (dispatch, user) => {
 
 export const logOutUser = () => {
     return (dispatch) => {
-        firebase.auth().signOut().then(() => console.log(dispatch))
-        .catch(function (error) {
+        firebase.auth().signOut().then(function () {
+            // Sign-out successful.
+            dispatch({
+                type: SIGN_OUT
+            });
+        }).catch(function (error) {
             // An error happened.
-            // dispatch({
-            //     type: SIGN_OUT_FAIL
-            // });
+            dispatch({
+                type: SIGN_OUT_FAIL
+            });
         });
     }
 };
 
-// const logoutUserSuccess = (dispatch) => {
-//     dispatch({
-//         type: SIGN_OUT
-//     });
-// };
-
-// const logoutUserFail = (dispatch) => {
-//     dispatch({
-//         type: SIGN_OUT_FAIL
-//     });
+// export const userFetch = () => {
+//     return (dispatch) => {
+//         firebase.auth().signOut().then(function () {
+//             // Sign-out successful.
+//             dispatch({
+//                 type: SIGN_OUT
+//             });
+//         }).catch(function (error) {
+//             // An error happened.
+//             dispatch({
+//                 type: SIGN_OUT_FAIL
+//             });
+//         });
+//     }
 // };

@@ -5,7 +5,7 @@ import firebase from 'firebase';
 import { createAppContainer } from 'react-navigation';
 import { createDrawerNavigator, DrawerActions } from 'react-navigation-drawer';
 import { createStackNavigator } from 'react-navigation-stack';
-import { emailChanged, passwordChanged, loginUser, logOutUser } from '../actions';
+import { emailChanged, passwordChanged, loginUser } from '../actions';
 
 class TaskList extends Component {
 
@@ -62,4 +62,4 @@ const mapStateToProps = state => {
   }
 }
 
-export default connect(mapStateToProps, { emailChanged, passwordChanged, loginUser, logOutUser })(TaskList);
+export default connect(mapStateToProps, { emailChanged, passwordChanged, loginUser })(TaskList);

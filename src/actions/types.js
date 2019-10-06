@@ -6,3 +6,6 @@ export const LOGIN_USER = 'login_user';
 export const SIGNED_IN = 'sign_in';
 export const SIGN_OUT = 'sign_out';
 export const SIGN_OUT_FAIL = 'sign_out_fail';
+export const REGISTER_USER_FAIL = 'register_user_fail';
+export const PASSWORD_FAIL = 'password_fail';
+export const REGISTER_USER_SUCCESS = 'register_user_success';

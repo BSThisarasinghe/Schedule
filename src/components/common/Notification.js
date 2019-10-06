@@ -21,10 +21,6 @@ class Notification extends Component {
         }
     }
 
-    // goBack() {
-    //     this.props.logOutUser();
-    // }
-
     showLogout() {
         return (
             <ModalDropdown options={[this.state.user_name, 'Logout']} onSelect={(idx, value) => this.onSelectOpt(idx, value)} style={{ width: '100%', height: 30, justifyContent: 'center', paddingLeft: 20 }} dropdownStyle={{ width: 100, height: 82, paddingBottom: 0 }} dropdownTextStyle={{ color: '#000', fontSize: 15 }} dropdownTextHighlightStyle={{ fontWeight: 'bold' }} >

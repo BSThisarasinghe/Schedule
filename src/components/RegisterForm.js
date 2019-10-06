@@ -5,14 +5,14 @@ import { createAppContainer } from 'react-navigation';
 import { createDrawerNavigator } from 'react-navigation-drawer';
 import { createStackNavigator } from 'react-navigation-stack';
 import { createBottomTabNavigator } from 'react-navigation-tabs';
-import { emailChanged, passwordChanged, loginUser } from '../actions';
+import { registerUser } from '../actions';
 import { Card, CardSection, Input, Button, Spinner } from './common';
 
-class LoginForm extends Component {
+class RegisterForm extends Component {
 
     constructor(props) {
         super(props);
-        this.state = { email: '', password: '' };
+        this.state = { name: '', email: '', password: '', cpwd: '' };
     }
 
     onEmailChange(text) {
@@ -23,10 +23,10 @@ class LoginForm extends Component {
         this.props.passwordChanged(text);
     }
 
-    onLogin() {
-        const { email, password } = this.state;
+    onRegister() {
+        const { name, email, password, cpwd } = this.state;
 
-        this.props.loginUser({ email, password });
+        this.props.registerUser({ name, email, password, cpwd });
         // console.log(user);
         // if(user !== null){
         //     this.props.navigation.navigate('Profile');
@@ -51,7 +51,7 @@ class LoginForm extends Component {
         console.log(nextProps.user);
         if (nextProps.user !== null) {
             this.props.navigation.navigate('Profile');
-            this.setState({ email: '', password: '' });
+            this.setState({ name: '', email: '', password: '', cpwd: '' });
         }
     }
 
@@ -61,8 +61,8 @@ class LoginForm extends Component {
         }
 
         return (
-            <Button onPress={this.onLogin.bind(this)}>
-                Login
+            <Button onPress={this.onRegister.bind(this)}>
+                Sign Up
             </Button>
         );
     }
@@ -70,6 +70,15 @@ class LoginForm extends Component {
     render() {
         return (
             <Card>
+                <CardSection>
+                    <Input
+                        label="Name"
+                        placeholder="Michael Knight"
+                        onChangeText={name => this.setState({ name })}
+                        value={this.state.name}
+                        secureTextEntry={false}
+                    />
+                </CardSection>
                 <CardSection>
                     <Input
                         label="Email"
@@ -86,6 +95,15 @@ class LoginForm extends Component {
                         placeholder="Password"
                         onChangeText={password => this.setState({ password })}
                         value={this.state.password}
+                    />
+                </CardSection>
+                <CardSection>
+                    <Input
+                        secureTextEntry={true}
+                        label="Confirm Password"
+                        placeholder="Confirm Password"
+                        onChangeText={cpwd => this.setState({ cpwd })}
+                        value={this.state.cpwd}
                     />
                 </CardSection>
                 <Text style={styles.errorTextStyle}>
@@ -117,4 +135,4 @@ const mapStateToProps = state => {
     }
 }
 
-export default connect(mapStateToProps, { emailChanged, passwordChanged, loginUser })(LoginForm);
+export default connect(mapStateToProps, { registerUser })(RegisterForm);

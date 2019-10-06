@@ -3,11 +3,18 @@ import { connect } from 'react-redux';
 import { createAppContainer } from 'react-navigation';
 import { createDrawerNavigator } from 'react-navigation-drawer';
 import { createStackNavigator } from 'react-navigation-stack';
+import { createBottomTabNavigator } from 'react-navigation-tabs';
 import LoginForm from './components/LoginForm';
+import RegisterForm from './components/RegisterForm';
 import TaskList from './components/TaskList';
 import OpenWindow from './components/OpenWindow';
 import { Toggle, Notification } from './components/common';
 import { emailChanged, passwordChanged, loginUser, logOutUser } from './actions';
+
+const ThirdNavigator = createBottomTabNavigator({
+    LoginForm,
+    RegisterForm
+});
 
 const SecondNavigator = createDrawerNavigator({
     Profile: {
@@ -23,7 +30,7 @@ const SecondNavigator = createDrawerNavigator({
 const MainNavigator = createStackNavigator({
     Open: { screen: OpenWindow },
     Home: {
-        screen: LoginForm,
+        screen: ThirdNavigator,
         navigationOptions: ({ navigation }) => ({
             title: 'Sign In',
             headerStyle: { backgroundColor: '#0680EC', height: 45 },
