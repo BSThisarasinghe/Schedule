@@ -12,7 +12,7 @@ class RegisterForm extends Component {
 
     constructor(props) {
         super(props);
-        this.state = { name: '', email: '', password: '', cpwd: '' };
+        this.state = { name: '', email: '', password: '', cpwd: '', phone: '' };
     }
 
     onEmailChange(text) {
@@ -24,9 +24,9 @@ class RegisterForm extends Component {
     }
 
     onRegister() {
-        const { name, email, password, cpwd } = this.state;
+        const { name, email, password, cpwd, phone } = this.state;
 
-        this.props.registerUser({ name, email, password, cpwd });
+        this.props.registerUser({ name, email, password, cpwd, phone });
         // console.log(user);
         // if(user !== null){
         //     this.props.navigation.navigate('Profile');
@@ -51,7 +51,7 @@ class RegisterForm extends Component {
         console.log(nextProps.user);
         if (nextProps.user !== null) {
             this.props.navigation.navigate('Profile');
-            this.setState({ name: '', email: '', password: '', cpwd: '' });
+            this.setState({ name: '', email: '', password: '', cpwd: '', phone: '' });
         }
     }
 
@@ -85,6 +85,15 @@ class RegisterForm extends Component {
                         placeholder="email@gmail.com"
                         onChangeText={email => this.setState({ email })}
                         value={this.state.email}
+                        secureTextEntry={false}
+                    />
+                </CardSection>
+                <CardSection>
+                    <Input
+                        label="Mobile Number"
+                        placeholder="077 555 5555"
+                        onChangeText={phone => this.setState({ phone })}
+                        value={this.state.phone}
                         secureTextEntry={false}
                     />
                 </CardSection>

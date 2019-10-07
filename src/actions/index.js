@@ -9,7 +9,8 @@ import {
     SIGN_OUT_FAIL,
     REGISTER_USER_FAIL,
     PASSWORD_FAIL,
-    REGISTER_USER_SUCCESS
+    REGISTER_USER_SUCCESS,
+    USER_FETCH_SUCCESS
 } from './types';
 
 export const emailChanged = (text) => {
@@ -26,7 +27,7 @@ export const passwordChanged = (text) => {
     }
 };
 
-export const registerUser = ({ name, email, password, cpwd }) => {
+export const registerUser = ({ name, email, password, cpwd, phone }) => {
     return (dispatch) => {
         dispatch({
             type: LOGIN_USER
@@ -36,11 +37,11 @@ export const registerUser = ({ name, email, password, cpwd }) => {
             firebase.auth().createUserWithEmailAndPassword(email, password)
                 .then(user => {
                     const { currentUser } = firebase.auth();
-                    firebase.database().ref(`users/${currentUser.uid}/`)
-                        .push({ name });
+                    firebase.database().ref(`users/${currentUser.uid}/personalinfo`)
+                        .push({ name, phone });
                     registerUserSuccess(dispatch, currentUser);
                 })
-                .catch(() => registerUserFail(dispatch));
+                .catch((error) => console.error(error));
         } else {
             passwordFail(dispatch);
         }
@@ -101,18 +102,16 @@ export const logOutUser = () => {
     }
 };
 
-// export const userFetch = () => {
-//     return (dispatch) => {
-//         firebase.auth().signOut().then(function () {
-//             // Sign-out successful.
-//             dispatch({
-//                 type: SIGN_OUT
-//             });
-//         }).catch(function (error) {
-//             // An error happened.
-//             dispatch({
-//                 type: SIGN_OUT_FAIL
-//             });
-//         });
-//     }
-// };
+export const userFetch = () => {
+    const { currentUser } = firebase.auth();
+
+    return (dispatch) => {
+        firebase.database().ref(`users/${currentUser.uid}/personalinfo`)
+            .on('value', snapshot => {
+                dispatch({
+                    type: USER_FETCH_SUCCESS,
+                    payload: snapshot.val()
+                });
+            });
+    }
+};

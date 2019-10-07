@@ -8,7 +8,8 @@ import {
     SIGN_OUT_FAIL,
     REGISTER_USER_FAIL,
     PASSWORD_FAIL,
-    REGISTER_USER_SUCCESS
+    REGISTER_USER_SUCCESS,
+    USER_FETCH_SUCCESS
 } from '../actions/types';
 
 const INITIAL_STATE = {
@@ -19,6 +20,7 @@ const INITIAL_STATE = {
     user: null,
     error: '',
     loading: false,
+    username: ''
 };
 
 export default (state = INITIAL_STATE, action) => {
@@ -43,6 +45,8 @@ export default (state = INITIAL_STATE, action) => {
             return { ...state, ...INITIAL_STATE };
         case SIGN_OUT_FAIL:
             return { ...state, error: 'Sign Out Failed!' };
+        case USER_FETCH_SUCCESS:
+            return action.payload;
         default:
             return state;
     }

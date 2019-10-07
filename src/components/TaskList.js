@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import React, { Component } from 'react';
 import { Text, View, BackHandler } from 'react-native';
 import { connect } from 'react-redux';
@@ -5,7 +6,7 @@ import firebase from 'firebase';
 import { createAppContainer } from 'react-navigation';
 import { createDrawerNavigator, DrawerActions } from 'react-navigation-drawer';
 import { createStackNavigator } from 'react-navigation-stack';
-import { emailChanged, passwordChanged, loginUser } from '../actions';
+import { userFetch } from '../actions';
 
 class TaskList extends Component {
 
@@ -15,7 +16,8 @@ class TaskList extends Component {
   }
 
   UNSAFE_componentWillMount() {
-    // this.props.navigation.dispatch(DrawerActions.toggleDrawer());
+    this.props.userFetch();
+    // console.log(this.props.username.name);
     BackHandler.addEventListener('hardwareBackPress', this.handleBackButtonClick.bind(this));
   }
 
@@ -23,14 +25,19 @@ class TaskList extends Component {
     BackHandler.removeEventListener('hardwareBackPress', this.handleBackButtonClick.bind(this));
   }
 
+  // componentDidMount(){
+  //   console.log(firebase.auth().currentUser.uid);
+  // }
+
   UNSAFE_componentWillReceiveProps(nextProps) {
-    // console.log(firebase.auth().currentUser);
+    // console.log(nextProps.username);
     if (firebase.auth().currentUser == null) {
       this.props.navigation.navigate('Home');
     }
   }
 
   render() {
+    console.log(this.props);
     return (
       <View>
         <Text>Employee</Text>
@@ -53,13 +60,11 @@ const styles = {
 }
 
 const mapStateToProps = state => {
-  return {
-    email: state.auth.email,
-    password: state.auth.password,
-    error: state.auth.error,
-    loading: state.auth.loading,
-    user: state.auth.user
-  }
+    const username = _.map(state.username, (val, uid) => {
+      return { ...val, uid };
+    });
+
+    return { username };
 }
 
-export default connect(mapStateToProps, { emailChanged, passwordChanged, loginUser })(TaskList);
+export default connect(mapStateToProps, { userFetch })(TaskList);

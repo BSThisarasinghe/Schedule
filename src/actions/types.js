@@ -9,3 +9,4 @@ export const SIGN_OUT_FAIL = 'sign_out_fail';
 export const REGISTER_USER_FAIL = 'register_user_fail';
 export const PASSWORD_FAIL = 'password_fail';
 export const REGISTER_USER_SUCCESS = 'register_user_success';
+export const USER_FETCH_SUCCESS = 'user_fetch_success';
