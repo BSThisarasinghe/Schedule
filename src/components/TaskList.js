@@ -25,10 +25,6 @@ class TaskList extends Component {
     BackHandler.removeEventListener('hardwareBackPress', this.handleBackButtonClick.bind(this));
   }
 
-  // componentDidMount(){
-  //   console.log(firebase.auth().currentUser.uid);
-  // }
-
   UNSAFE_componentWillReceiveProps(nextProps) {
     // console.log(nextProps.username);
     if (firebase.auth().currentUser == null) {

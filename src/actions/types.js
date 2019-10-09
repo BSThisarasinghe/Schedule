@@ -10,3 +10,7 @@ export const REGISTER_USER_FAIL = 'register_user_fail';
 export const PASSWORD_FAIL = 'password_fail';
 export const REGISTER_USER_SUCCESS = 'register_user_success';
 export const USER_FETCH_SUCCESS = 'user_fetch_success';
+
+export const ADD_SCHEDULE = 'add_schedule';
+export const ADD_SCHEDULE_SUCCESS = 'add_schedule_success';
+export const ADD_SCHEDULE_FAIL = 'add_schedule_fail';

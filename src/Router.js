@@ -8,6 +8,7 @@ import LoginForm from './components/LoginForm';
 import RegisterForm from './components/RegisterForm';
 import TaskList from './components/TaskList';
 import OpenWindow from './components/OpenWindow';
+import AddSchedule from './components/AddSchedule';
 import { Toggle, Notification } from './components/common';
 import { emailChanged, passwordChanged, loginUser, logOutUser } from './actions';
 
@@ -21,6 +22,12 @@ const SecondNavigator = createDrawerNavigator({
         screen: TaskList,
         navigationOptions: ({ navigation }) => ({
             title: 'Your Schedule'
+        })
+    },
+    AddSchedule: {
+        screen: AddSchedule,
+        navigationOptions: ({ navigation }) => ({
+            title: 'Add Schedule'
         })
     }
 }, {
