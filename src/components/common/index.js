@@ -6,3 +6,4 @@ export * from './Input';
 export * from './Spinner';
 export * from './Toggle';
 export * from './Notification';
+export * from './Confirm';

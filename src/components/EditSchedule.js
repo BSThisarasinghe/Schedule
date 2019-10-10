@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import React, { Component } from 'react';
 import { Text, TouchableOpacity, TextInput, View } from 'react-native';
 import { connect } from 'react-redux';
@@ -7,44 +8,22 @@ import { createStackNavigator } from 'react-navigation-stack';
 import { createBottomTabNavigator } from 'react-navigation-tabs';
 import DateTimePicker from "react-native-modal-datetime-picker";
 import Moment from 'moment';
-import { addSchedule } from '../actions';
-import { Card, CardSection, Input, Button, Spinner } from './common';
+import { editSchedule, setReload, scheduleDelete } from '../actions';
+import { Card, CardSection, Input, Button, Spinner, Confirm } from './common';
 
-class AddSchedule extends Component {
+class EditSchedule extends Component {
 
     constructor(props) {
         super(props);
-        this.state = { reminder: '', date: '', time: '', isDatePickerVisible: false, isTimePickerVisible: false };
-    }
-
-    onSubmit() {
-        const { reminder, date, time } = this.state;
-
-        this.props.addSchedule({ reminder, date, time });
-        // console.log(user);
-        // if(user !== null){
-        //     this.props.navigation.navigate('Profile');
-        // }
-    }
-
-    UNSAFE_componentWillReceiveProps(nextProps) {
-        console.log(nextProps.success);
-        if (nextProps.success === true) {
-            this.props.navigation.navigate('Profile');
-            this.setState({ reminder: '', date: '', time: '' });
-        }
-    }
-
-    renderButton() {
-        if (this.props.loading) {
-            return <Spinner size="large" />;
-        }
-
-        return (
-            <Button onPress={this.onSubmit.bind(this)}>
-                Add Schedule
-            </Button>
-        );
+        this.state = { 
+            reminder: this.props.navigation.state.params.schedule.reminder, 
+            date: this.props.navigation.state.params.schedule.date, 
+            time: this.props.navigation.state.params.schedule.time, 
+            isDatePickerVisible: false, 
+            isTimePickerVisible: false,
+            success: false,
+            showModal: false
+        };
     }
 
     showDatePicker = () => {
@@ -76,8 +55,45 @@ class AddSchedule extends Component {
         this.hideTimePicker();
     };
 
+    UNSAFE_componentWillReceiveProps(nextProps) {
+        this.setState({ success: nextProps.success });
+        console.log(nextProps.success);
+        if (nextProps.success === true) {
+            this.props.navigation.navigate('Profile');
+        }
+        this.props.setReload();
+    }
+
+    onSubmit() {
+        const { reminder, date, time } = this.state;
+
+        this.props.editSchedule({ reminder, date, time, uid: this.props.navigation.state.params.schedule.uid });
+    }
+
+    renderButton() {
+        if (this.props.loading) {
+            return <Spinner size="large" />;
+        }
+
+        return (
+            <Button onPress={this.onSubmit.bind(this)}>
+                Save Changes
+            </Button>
+        );
+    }
+
+    onAccept(){
+        const { uid } = this.props.navigation.state.params.schedule;
+
+        this.props.scheduleDelete({ uid });
+        this.setState({ showModal: false });
+    }
+
+    onDecline(){
+        this.setState({ showModal: false });
+    }
+
     render() {
-        Moment.locale('en');
         // console.log(this.props.navigation.state.params.schedule);
         return (
             <Card>
@@ -140,6 +156,18 @@ class AddSchedule extends Component {
                 <CardSection>
                     {this.renderButton()}
                 </CardSection>
+                <CardSection>
+                    <Button onPress={() => this.setState({ showModal: !this.state.showModal })}>
+                        Delete Schedule
+                    </Button>
+                </CardSection>
+                <Confirm
+                    visible={this.state.showModal}
+                    onAccept={this.onAccept.bind(this)}
+                    onDecline={this.onDecline.bind(this)}
+                >
+                    Are you sure you want to delete this schedule?
+                </Confirm>
             </Card>
         );
     }
@@ -194,4 +222,4 @@ const mapStateToProps = state => {
     }
 }
 
-export default connect(mapStateToProps, { addSchedule })(AddSchedule);
+export default connect(mapStateToProps, { editSchedule, setReload, scheduleDelete })(EditSchedule);

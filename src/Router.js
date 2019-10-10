@@ -9,6 +9,7 @@ import RegisterForm from './components/RegisterForm';
 import TaskList from './components/TaskList';
 import OpenWindow from './components/OpenWindow';
 import AddSchedule from './components/AddSchedule';
+import EditSchedule from './components/EditSchedule';
 import { Toggle, Notification } from './components/common';
 import { emailChanged, passwordChanged, loginUser, logOutUser } from './actions';
 
@@ -52,6 +53,13 @@ const MainNavigator = createStackNavigator({
             headerStyle: { backgroundColor: '#0680EC', height: 45 },
             headerLeft: <Toggle navigation={navigation} />,
             headerRight: <Notification logOutUser={logOutUser()} />
+        })
+    },
+    EditSchedule: {
+        screen: EditSchedule,
+        navigationOptions: ({ navigation }) => ({
+            title: 'Edit Schedule',
+            headerStyle: { backgroundColor: '#0680EC', height: 45 },
         })
     }
 });

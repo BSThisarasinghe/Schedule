@@ -1,14 +1,24 @@
 import _ from 'lodash';
 import React, { Component } from 'react';
-import { Text, View, BackHandler } from 'react-native';
+import { Text, View, BackHandler, FlatList, TouchableOpacity } from 'react-native';
 import { connect } from 'react-redux';
 import firebase from 'firebase';
 import { createAppContainer } from 'react-navigation';
 import { createDrawerNavigator, DrawerActions } from 'react-navigation-drawer';
 import { createStackNavigator } from 'react-navigation-stack';
-import { userFetch } from '../actions';
+import { userFetch, scheduleFetch, setReload } from '../actions';
+import { Card, CardSection, Input, Button, Spinner } from './common';
 
 class TaskList extends Component {
+
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      scrollEnabled: true,
+      scheduleList: []
+    };
+  }
 
   handleBackButtonClick() {
     BackHandler.exitApp();
@@ -17,7 +27,10 @@ class TaskList extends Component {
 
   UNSAFE_componentWillMount() {
     this.props.userFetch();
-    // console.log(this.props.username.name);
+    this.props.scheduleFetch();
+    // this.props.setReload();
+    // console.log("Hello");
+    this.setState({ scheduleList: this.props.schedules });
     BackHandler.addEventListener('hardwareBackPress', this.handleBackButtonClick.bind(this));
   }
 
@@ -30,37 +43,67 @@ class TaskList extends Component {
     if (firebase.auth().currentUser == null) {
       this.props.navigation.navigate('Home');
     }
+    this.setState({ scheduleList: this.props.schedules });
   }
 
+  onRowPress(schedules){
+    this.props.navigation.navigate('EditSchedule', { schedule: schedules });
+  }
+
+  renderListItem = ({ item }) => (
+    <TouchableOpacity style={styles.linkStyle} key={item.uid} onPress={() => this.onRowPress(item)}>
+      <Card>
+        <CardSection>
+          <Text>
+            {item.reminder}
+          </Text>
+        </CardSection>
+        <CardSection>
+          <Text>
+            {item.date}
+          </Text>
+        </CardSection>
+        <CardSection>
+          <Text>
+            {item.time}
+          </Text>
+        </CardSection>
+      </Card>
+    </TouchableOpacity>
+  )
+
   render() {
-    console.log(this.props);
+    // console.log(this.props);
     return (
-      <View>
-        <Text>Employee</Text>
-        <Text>Employee</Text>
-        <Text>Employee</Text>
-        <Text>Employee</Text>
-        <Text>Employee</Text>
-        <Text>Employee</Text>
-      </View>
+      <FlatList
+        data={this.props.schedules}
+        renderItem={this.renderListItem}
+        keyExtractor={(item, index) => item.uid.toString()}
+        extraData={this.state}
+        scrollEnabled={this.state.scrollEnabled}
+      />
     );
   }
 }
 
 const styles = {
   errorTextStyle: {
-      fontSize: 20,
-      alignSelf: 'center',
-      color: 'red'
+    fontSize: 20,
+    alignSelf: 'center',
+    color: 'red'
   }
 }
 
 const mapStateToProps = state => {
-    const username = _.map(state.username, (val, uid) => {
-      return { ...val, uid };
-    });
+  const username = _.map(state.username, (val, uid) => {
+    return { ...val, uid };
+  });
 
-    return { username };
+  const schedules = _.map(state.schedules, (val, uid) => {
+    return { ...val, uid };
+  });
+
+  return { username, schedules };
 }
 
-export default connect(mapStateToProps, { userFetch })(TaskList);
+export default connect(mapStateToProps, { userFetch, scheduleFetch, setReload })(TaskList);
