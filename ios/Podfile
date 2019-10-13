@@ -36,6 +36,8 @@ target 'Schedule' do
 
   pod 'RNReanimated', :path => '../node_modules/react-native-reanimated'
 
+  pod 'RNFirebase', :path => '../node_modules/react-native-firebase'
+
   target 'ScheduleTests' do
     inherit! :search_paths
     # Pods for testing

@@ -46,64 +46,93 @@ class TaskList extends Component {
     this.setState({ scheduleList: this.props.schedules });
   }
 
-  onRowPress(schedules){
+  onRowPress(schedules) {
     this.props.navigation.navigate('EditSchedule', { schedule: schedules });
   }
 
   renderListItem = ({ item }) => (
     <TouchableOpacity style={styles.linkStyle} key={item.uid} onPress={() => this.onRowPress(item)}>
-      <Card>
-        <CardSection>
-          <Text>
-            {item.reminder}
-          </Text>
-        </CardSection>
-        <CardSection>
-          <Text>
-            {item.date}
-          </Text>
-        </CardSection>
-        <CardSection>
-          <Text>
-            {item.time}
-          </Text>
-        </CardSection>
-      </Card>
+      <View style={{ width: '50%', height: 70, alignItems: 'flex-start', justifyContent: 'center' }}>
+        <Text style={styles.textReminderStyle}>{item.reminder}</Text>
+      </View>
+      <View style={{ width: '30%', height: 70, alignItems: 'flex-start', justifyContent: 'center' }}>
+        <Text style={styles.textStyle}>{item.date}</Text>
+      </View>
+      <View style={{ width: '20%', height: 70, alignItems: 'flex-start', justifyContent: 'center' }}>
+        <Text style={styles.textStyle}>{item.time}</Text>
+      </View>
     </TouchableOpacity>
   )
 
   render() {
-    // console.log(this.props);
     return (
-      <FlatList
-        data={this.props.schedules}
-        renderItem={this.renderListItem}
-        keyExtractor={(item, index) => item.uid.toString()}
-        extraData={this.state}
-        scrollEnabled={this.state.scrollEnabled}
-      />
+      <View style={styles.containerStyle}>
+        <FlatList
+          data={this.props.schedules}
+          renderItem={this.renderListItem}
+          keyExtractor={(item, index) => item.uid.toString()}
+          extraData={this.state}
+          scrollEnabled={this.state.scrollEnabled}
+        />
+      </View>
     );
   }
 }
 
 const styles = {
+  containerStyle: {
+    backgroundColor: '#EAEDEF',
+    padding: 5,
+    justifyContent: 'flex-start',
+    borderColor: '#ddd',
+    position: 'relative',
+    paddingBottom: 100,
+    flex: 1
+  },
   errorTextStyle: {
     fontSize: 20,
     alignSelf: 'center',
     color: 'red'
+  },
+  linkStyle: {
+    width: '100%',
+    height: 70,
+    backgroundColor: 'rgba(255, 255, 255, 0.5)',
+    flexDirection: 'row',
+    marginBottom: 10,
+    borderWidth: 1,
+    borderRadius: 5,
+    borderColor: '#ddd',
+    borderBottomWidth: 0,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+    elevation: 1,
+  },
+  textReminderStyle: {
+    fontSize: 16,
+    paddingLeft: 10,
+    color: '#000',
+    fontWeight: 'bold'
+  },
+  textStyle: {
+    fontSize: 14,
+    paddingLeft: 10,
+    color: '#000'
   }
 }
 
 const mapStateToProps = state => {
-  const username = _.map(state.username, (val, uid) => {
-    return { ...val, uid };
-  });
+  // const username = _.map(state.username, (val, uid) => {
+  //   return { ...val, uid };
+  // });
 
   const schedules = _.map(state.schedules, (val, uid) => {
     return { ...val, uid };
   });
 
-  return { username, schedules };
+  return { schedules };
 }
 
 export default connect(mapStateToProps, { userFetch, scheduleFetch, setReload })(TaskList);

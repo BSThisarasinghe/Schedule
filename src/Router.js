@@ -14,8 +14,21 @@ import { Toggle, Notification } from './components/common';
 import { emailChanged, passwordChanged, loginUser, logOutUser } from './actions';
 
 const ThirdNavigator = createBottomTabNavigator({
-    LoginForm,
-    RegisterForm
+    Login: LoginForm,
+    Register: RegisterForm
+},{
+    navigationOptions: ({ navigation }) => {
+        const { routeName } = navigation.state.routes[navigation.state.index];
+        if (routeName === 'Login') {
+            return {
+                headerTitle: "Sign In"
+            };
+        } else if (routeName === 'Register') {
+            return {
+                headerTitle: "Sign Up"
+            };
+        }
+    }
 });
 
 const SecondNavigator = createDrawerNavigator({
