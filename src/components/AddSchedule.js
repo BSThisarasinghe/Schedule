@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Text, TouchableOpacity, TextInput, View } from 'react-native';
+import { Text, TouchableOpacity, TextInput, View, BackHandler } from 'react-native';
 import { connect } from 'react-redux';
 import { createAppContainer } from 'react-navigation';
 import { createDrawerNavigator } from 'react-navigation-drawer';
@@ -27,8 +27,21 @@ class AddSchedule extends Component {
         // }
     }
 
+    handleBackButtonClick() {
+        this.props.navigation.navigate('Profile');
+        return true;
+    }
+
+    UNSAFE_componentWillMount() {
+        BackHandler.addEventListener('hardwareBackPress', this.handleBackButtonClick.bind(this));
+    }
+
+    componentWillUnmount() {
+        BackHandler.removeEventListener('hardwareBackPress', this.handleBackButtonClick.bind(this));
+    }
+
     UNSAFE_componentWillReceiveProps(nextProps) {
-        console.log(nextProps.success);
+        // console.log(nextProps.success);
         if (nextProps.success === true) {
             this.props.navigation.navigate('Profile');
             this.setState({ reminder: '', date: '', time: '' });
@@ -41,7 +54,7 @@ class AddSchedule extends Component {
         }
 
         return (
-            <Button onPress={this.onSubmit.bind(this)}>
+            <Button onPress={this.onSubmit.bind(this)} style={{ backgroundColor: 'rgba(82, 109, 127, 1)' }} textStyle={{ color: '#fff' }}>
                 Add Schedule
             </Button>
         );
@@ -57,7 +70,7 @@ class AddSchedule extends Component {
 
     handleDatePicked = date => {
         // const day = Moment(date).format('d/MM/YYYY');
-        
+
         this.setState({ date: Moment(date).format('DD/MM/YYYY') });
         this.hideDatePicker();
     };
@@ -80,8 +93,8 @@ class AddSchedule extends Component {
         Moment.locale('en');
         // console.log(this.props.navigation.state.params.schedule);
         return (
-            <Card>
-                <CardSection>
+            <Card style={{ backgroundColor: '#fff' }}>
+                <CardSection cardSectionStyle={{ backgroundColor: '#fff' }}>
                     <Input
                         label="Schedule"
                         placeholder="Add your schedule"
@@ -90,7 +103,7 @@ class AddSchedule extends Component {
                         secureTextEntry={false}
                     />
                 </CardSection>
-                <CardSection>
+                <CardSection cardSectionStyle={{ backgroundColor: '#fff' }}>
                     <View style={styles.containerStyle}>
                         <TouchableOpacity onPress={this.showDatePicker} style={styles.datepickerStyle}>
                             <Text style={styles.buttonTextStyle}>
@@ -112,7 +125,7 @@ class AddSchedule extends Component {
                         />
                     </View>
                 </CardSection>
-                <CardSection>
+                <CardSection cardSectionStyle={{ backgroundColor: '#fff' }}>
                     <View style={styles.containerStyle}>
                         <TouchableOpacity onPress={this.showTimePicker} style={styles.datepickerStyle}>
                             <Text style={styles.buttonTextStyle}>
@@ -153,8 +166,8 @@ const styles = {
         marginLeft: 2,
         marginRight: 2,
         borderRadius: 2,
-        borderWidth: 0.5,
-        borderColor: '#0680EC'
+        borderWidth: 1,
+        borderColor: 'rgba(82, 109, 127, 1)'
     },
     buttonTextStyle: {
         alignSelf: 'center',

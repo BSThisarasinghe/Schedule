@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import React from 'react';
 import { connect } from 'react-redux';
 import { createAppContainer } from 'react-navigation';
@@ -11,22 +12,20 @@ import OpenWindow from './components/OpenWindow';
 import AddSchedule from './components/AddSchedule';
 import EditSchedule from './components/EditSchedule';
 import { Toggle, Notification } from './components/common';
-import { emailChanged, passwordChanged, loginUser, logOutUser } from './actions';
+import { userFetch, passwordChanged, loginUser, logOutUser } from './actions';
 
 const ThirdNavigator = createBottomTabNavigator({
     Login: LoginForm,
     Register: RegisterForm
-},{
-    navigationOptions: ({ navigation }) => {
-        const { routeName } = navigation.state.routes[navigation.state.index];
-        if (routeName === 'Login') {
-            return {
-                headerTitle: "Sign In"
-            };
-        } else if (routeName === 'Register') {
-            return {
-                headerTitle: "Sign Up"
-            };
+}, {
+    tabBarOptions: {
+        activeBackgroundColor: '#fff',
+        activeTintColor: 'rgba(82, 109, 127, 1)',
+        inactiveBackgroundColor: 'rgba(82, 109, 127, 1)',
+        inactiveTintColor: '#fff',
+        labelStyle: {
+            fontSize: 18,
+            marginBottom: 10
         }
     }
 });
@@ -53,26 +52,25 @@ const MainNavigator = createStackNavigator({
     Home: {
         screen: ThirdNavigator,
         navigationOptions: ({ navigation }) => ({
-            title: 'Sign In',
-            headerStyle: { backgroundColor: '#0680EC', height: 45 },
+            headerStyle: { backgroundColor: 'transparent', height: 0 },
             headerLeft: null,
             headerRight: null
         })
     },
     Profile: {
         screen: SecondNavigator,
-        navigationOptions: ({ navigation }) => ({
+        navigationOptions: ({ navigation, username, loading }) => ({
             title: 'Your Schedule',
-            headerStyle: { backgroundColor: '#0680EC', height: 45 },
+            headerStyle: { backgroundColor: 'rgba(82, 109, 127, 1)', height: 45 },
             headerLeft: <Toggle navigation={navigation} />,
-            headerRight: <Notification logOutUser={logOutUser()} />
+            headerRight: <Notification logOutUser={logOutUser()} username={username} loading={loading} />
         })
     },
     EditSchedule: {
         screen: EditSchedule,
         navigationOptions: ({ navigation }) => ({
             title: 'Edit Schedule',
-            headerStyle: { backgroundColor: '#0680EC', height: 45 },
+            headerStyle: { backgroundColor: 'rgba(82, 109, 127, 1)', height: 45 },
         })
     }
 });
@@ -81,13 +79,12 @@ const MainNavigator = createStackNavigator({
 const Router = createAppContainer(MainNavigator);
 
 const mapStateToProps = state => {
-    return {
-        email: state.auth.email,
-        password: state.auth.password,
-        error: state.auth.error,
-        loading: state.auth.loading,
-        user: state.auth.user
-    }
+    const loading = state.username.loading;
+    const username = _.map(state.username.user_details, (val, uid) => {
+        return { ...val, uid };
+    });
+
+    return { loading, username };
 }
 
-export default connect(mapStateToProps, { emailChanged, passwordChanged, loginUser, logOutUser })(Router);
+export default connect(mapStateToProps, { userFetch, passwordChanged, loginUser, logOutUser })(Router);

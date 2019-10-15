@@ -15,6 +15,7 @@ class TaskList extends Component {
     super(props);
 
     this.state = {
+      user_name: '',
       scrollEnabled: true,
       scheduleList: []
     };
@@ -26,7 +27,6 @@ class TaskList extends Component {
   }
 
   UNSAFE_componentWillMount() {
-    this.props.userFetch();
     this.props.scheduleFetch();
     // this.props.setReload();
     // console.log("Hello");
@@ -34,12 +34,16 @@ class TaskList extends Component {
     BackHandler.addEventListener('hardwareBackPress', this.handleBackButtonClick.bind(this));
   }
 
+  componentDidMount() {
+    this.props.userFetch();
+  }
+
   componentWillUnmount() {
     BackHandler.removeEventListener('hardwareBackPress', this.handleBackButtonClick.bind(this));
   }
 
   UNSAFE_componentWillReceiveProps(nextProps) {
-    // console.log(nextProps.username);
+    this.setState({ user_name: nextProps.username[0] });
     if (firebase.auth().currentUser == null) {
       this.props.navigation.navigate('Home');
     }
@@ -64,16 +68,36 @@ class TaskList extends Component {
     </TouchableOpacity>
   )
 
+  completeView() {
+    if (this.props.loading) {
+      return (
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', marginTop: 100, height: 100 }}>
+          <Spinner size="large" spinnerStyle={styles.spinnerStyle} />
+        </View>
+      );
+    } else if (this.props.schedules.length === 0) {
+      return (
+        <View style={{ paddingLeft: 20, paddingRight: 20 }}>
+          <Text style={styles.noDataTextStyle}>You do not have any schedules yet.</Text>
+        </View>
+      );
+    }
+    return (
+      <FlatList
+        data={this.props.schedules}
+        renderItem={this.renderListItem}
+        keyExtractor={(item, index) => item.uid.toString()}
+        extraData={this.state}
+        scrollEnabled={this.state.scrollEnabled}
+      />
+    );
+  }
+
   render() {
+    console.log(this.props.username[0]);
     return (
       <View style={styles.containerStyle}>
-        <FlatList
-          data={this.props.schedules}
-          renderItem={this.renderListItem}
-          keyExtractor={(item, index) => item.uid.toString()}
-          extraData={this.state}
-          scrollEnabled={this.state.scrollEnabled}
-        />
+        {this.completeView()}
       </View>
     );
   }
@@ -120,19 +144,28 @@ const styles = {
     fontSize: 14,
     paddingLeft: 10,
     color: '#000'
+  },
+  noDataTextStyle: {
+    fontSize: 25,
+    color: '#8A8A8A',
+    fontWeight: 'bold',
+    marginTop: 100,
+    textAlign: 'center'
   }
 }
 
 const mapStateToProps = state => {
-  // const username = _.map(state.username, (val, uid) => {
-  //   return { ...val, uid };
-  // });
-
-  const schedules = _.map(state.schedules, (val, uid) => {
+  const username = _.map(state.username.user_details, (val, uid) => {
     return { ...val, uid };
   });
 
-  return { schedules };
+  const loading = state.schedules.loading;
+
+  const schedules = _.map(state.schedules.listData, (val, uid) => {
+    return { ...val, uid };
+  });
+
+  return { schedules, loading, username };
 }
 
 export default connect(mapStateToProps, { userFetch, scheduleFetch, setReload })(TaskList);

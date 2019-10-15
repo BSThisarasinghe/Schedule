@@ -15,6 +15,7 @@
     "moment": "^2.24.0",
     "react": "16.9.0",
     "react-native": "0.61.1",
+    "react-native-communications": "^2.2.1",
     "react-native-fcm": "^16.2.4",
     "react-native-firebase": "~5.5.6",
     "react-native-gesture-handler": "^1.4.1",

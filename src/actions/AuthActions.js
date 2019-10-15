@@ -27,7 +27,7 @@ export const passwordChanged = (text) => {
     }
 };
 
-export const registerUser = ({ name, email, password, cpwd, phone }) => {
+export const registerUser = ({ name, email, password, cpwd, phone, display_name }) => {
     return (dispatch) => {
         dispatch({
             type: LOGIN_USER
@@ -38,7 +38,7 @@ export const registerUser = ({ name, email, password, cpwd, phone }) => {
                 .then(user => {
                     const { currentUser } = firebase.auth();
                     firebase.database().ref(`users/${currentUser.uid}/personalinfo`)
-                        .push({ name, phone });
+                        .push({ name, phone, display_name });
                     registerUserSuccess(dispatch, currentUser);
                 })
                 .catch(() => registerUserFail(dispatch));

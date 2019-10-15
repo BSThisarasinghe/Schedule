@@ -3,13 +3,13 @@ import {
 } from '../actions/types';
 
 const INITIAL_STATE = {
-    username: ''
+    loading: true
 };
 
 export default (state = INITIAL_STATE, action) => {
     switch (action.type) {
         case USER_FETCH_SUCCESS:
-            return action.payload;
+            return { ...state, loading: false, user_details: action.payload };
         default:
             return state;
     }

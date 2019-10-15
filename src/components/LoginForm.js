@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Text, BackHandler } from 'react-native';
+import { Text, BackHandler, View, Image } from 'react-native';
 import { connect } from 'react-redux';
 import { createAppContainer } from 'react-navigation';
 import { createDrawerNavigator } from 'react-navigation-drawer';
@@ -48,7 +48,7 @@ class LoginForm extends Component {
     }
 
     UNSAFE_componentWillReceiveProps(nextProps) {
-        console.log(nextProps.user);
+        // console.log(nextProps.user);
         if (nextProps.user !== null) {
             this.props.navigation.navigate('Profile');
             this.setState({ email: '', password: '' });
@@ -70,12 +70,18 @@ class LoginForm extends Component {
     render() {
         return (
             <Card>
+                <View style={styles.containerStyle2}>
+                    <Image source={require('./pics/logo.png')} style={styles.imageStyle} />
+                </View>
                 <CardSection>
                     <Input
                         label="Email"
+                        labelStyle={{ color: '#fff' }}
                         placeholder="email@gmail.com"
+                        placeholderTextColor="#DBDDDE"
                         onChangeText={email => this.setState({ email })}
                         value={this.state.email}
+                        style={{ color: '#fff' }}
                         secureTextEntry={false}
                     />
                 </CardSection>
@@ -83,8 +89,11 @@ class LoginForm extends Component {
                     <Input
                         secureTextEntry={true}
                         label="Password"
+                        labelStyle={{ color: '#fff' }}
                         placeholder="Password"
+                        placeholderTextColor="#DBDDDE"
                         onChangeText={password => this.setState({ password })}
+                        style={{ color: '#fff' }}
                         value={this.state.password}
                     />
                 </CardSection>
@@ -104,6 +113,16 @@ const styles = {
         fontSize: 20,
         alignSelf: 'center',
         color: 'red'
+    },
+    containerStyle2: {
+        marginTop: 50,
+        height: 150,
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    imageStyle: {
+        height: 175,
+        width: 175
     }
 }
 

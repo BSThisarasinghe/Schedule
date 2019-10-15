@@ -8,7 +8,7 @@ import { Spinner } from './Spinner';
 
 class Notification extends Component {
     state = {
-        user_name: 'label',
+        user_name: '',
         loading: true,
         level: ''
     };
@@ -19,6 +19,10 @@ class Notification extends Component {
         if (value === "Logout") {
             firebase.auth().signOut();
         }
+    }
+
+    UNSAFE_componentWillReceiveProps(nextProps) {
+        console.log(nextProps);
     }
 
     showLogout() {

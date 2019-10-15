@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import React, { Component } from 'react';
-import { Text, TouchableOpacity, TextInput, View } from 'react-native';
+import { Text, TouchableOpacity, TextInput, View, BackHandler } from 'react-native';
 import { connect } from 'react-redux';
 import { createAppContainer } from 'react-navigation';
 import { createDrawerNavigator } from 'react-navigation-drawer';
@@ -15,11 +15,11 @@ class EditSchedule extends Component {
 
     constructor(props) {
         super(props);
-        this.state = { 
-            reminder: this.props.navigation.state.params.schedule.reminder, 
-            date: this.props.navigation.state.params.schedule.date, 
-            time: this.props.navigation.state.params.schedule.time, 
-            isDatePickerVisible: false, 
+        this.state = {
+            reminder: this.props.navigation.state.params.schedule.reminder,
+            date: this.props.navigation.state.params.schedule.date,
+            time: this.props.navigation.state.params.schedule.time,
+            isDatePickerVisible: false,
             isTimePickerVisible: false,
             success: false,
             showModal: false
@@ -36,7 +36,7 @@ class EditSchedule extends Component {
 
     handleDatePicked = date => {
         // const day = Moment(date).format('d/MM/YYYY');
-        
+
         this.setState({ date: Moment(date).format('DD/MM/YYYY') });
         this.hideDatePicker();
     };
@@ -49,6 +49,19 @@ class EditSchedule extends Component {
         this.setState({ isTimePickerVisible: false });
     };
 
+    handleBackButtonClick() {
+        this.props.navigation.navigate('Profile');
+        return true;
+    }
+
+    UNSAFE_componentWillMount() {
+        BackHandler.addEventListener('hardwareBackPress', this.handleBackButtonClick.bind(this));
+    }
+
+    componentWillUnmount() {
+        BackHandler.removeEventListener('hardwareBackPress', this.handleBackButtonClick.bind(this));
+    }
+
     handleTimePicked = time => {
         // console.log("A date has been picked: ", Moment(time).format('hh:mm'));
         this.setState({ time: Moment(time).format('hh:mm') });
@@ -57,11 +70,11 @@ class EditSchedule extends Component {
 
     UNSAFE_componentWillReceiveProps(nextProps) {
         this.setState({ success: nextProps.success });
-        console.log(nextProps.success);
+        // console.log(nextProps.success);
         if (nextProps.success === true) {
             this.props.navigation.navigate('Profile');
+            this.props.setReload();
         }
-        this.props.setReload();
     }
 
     onSubmit() {
@@ -76,28 +89,28 @@ class EditSchedule extends Component {
         }
 
         return (
-            <Button onPress={this.onSubmit.bind(this)}>
+            <Button onPress={this.onSubmit.bind(this)} style={{ backgroundColor: 'rgba(82, 109, 127, 1)' }} textStyle={{ color: '#fff' }}>
                 Save Changes
             </Button>
         );
     }
 
-    onAccept(){
+    onAccept() {
         const { uid } = this.props.navigation.state.params.schedule;
 
         this.props.scheduleDelete({ uid });
         this.setState({ showModal: false });
     }
 
-    onDecline(){
+    onDecline() {
         this.setState({ showModal: false });
     }
 
     render() {
         // console.log(this.props.navigation.state.params.schedule);
         return (
-            <Card>
-                <CardSection>
+            <Card style={{ backgroundColor: '#fff' }}>
+                <CardSection cardSectionStyle={{ backgroundColor: '#fff' }}>
                     <Input
                         label="Schedule"
                         placeholder="Add your schedule"
@@ -106,7 +119,7 @@ class EditSchedule extends Component {
                         secureTextEntry={false}
                     />
                 </CardSection>
-                <CardSection>
+                <CardSection cardSectionStyle={{ backgroundColor: '#fff' }}>
                     <View style={styles.containerStyle}>
                         <TouchableOpacity onPress={this.showDatePicker} style={styles.datepickerStyle}>
                             <Text style={styles.buttonTextStyle}>
@@ -128,7 +141,7 @@ class EditSchedule extends Component {
                         />
                     </View>
                 </CardSection>
-                <CardSection>
+                <CardSection cardSectionStyle={{ backgroundColor: '#fff' }}>
                     <View style={styles.containerStyle}>
                         <TouchableOpacity onPress={this.showTimePicker} style={styles.datepickerStyle}>
                             <Text style={styles.buttonTextStyle}>
@@ -157,7 +170,7 @@ class EditSchedule extends Component {
                     {this.renderButton()}
                 </CardSection>
                 <CardSection>
-                    <Button onPress={() => this.setState({ showModal: !this.state.showModal })}>
+                    <Button onPress={() => this.setState({ showModal: !this.state.showModal })} style={{ backgroundColor: 'rgba(82, 109, 127, 1)' }} textStyle={{ color: '#fff' }}>
                         Delete Schedule
                     </Button>
                 </CardSection>
@@ -181,8 +194,8 @@ const styles = {
         marginLeft: 2,
         marginRight: 2,
         borderRadius: 2,
-        borderWidth: 0.5,
-        borderColor: '#0680EC'
+        borderWidth: 1,
+        borderColor: 'rgba(82, 109, 127, 1)'
     },
     buttonTextStyle: {
         alignSelf: 'center',
