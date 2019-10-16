@@ -5,7 +5,7 @@ import CardSection from './CardSection';
 
 const Card = (props) => {
   return (
-    <ScrollView style={[styles.containerStyle, props.style]}>
+    <ScrollView style={[styles.containerStyle, props.style]} keyboardShouldPersistTaps='always'>
       {props.children}
     </ScrollView>
   );

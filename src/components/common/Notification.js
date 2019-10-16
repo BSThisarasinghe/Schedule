@@ -1,10 +1,12 @@
+import _ from 'lodash';
 import React, { Component } from 'react';
 import { View, Text, TouchableOpacity, Image, Alert } from 'react-native';
+import { connect } from 'react-redux';
 import ModalDropdown from 'react-native-modal-dropdown';
 import { StackNavigator } from 'react-navigation';
 import firebase from 'firebase';
+import { userFetch } from '../../actions';
 import { Spinner } from './Spinner';
-
 
 class Notification extends Component {
     state = {
@@ -18,11 +20,18 @@ class Notification extends Component {
         this.setState({ level: value });
         if (value === "Logout") {
             firebase.auth().signOut();
+            this.setState({ user_name: '' });
         }
     }
 
     UNSAFE_componentWillReceiveProps(nextProps) {
-        console.log(nextProps);
+        if(nextProps.username.length > 0){
+            this.setState({ user_name: nextProps.username[0].display_name });
+        }
+    }
+
+    componentDidMount() {
+        this.props.userFetch();
     }
 
     showLogout() {
@@ -39,6 +48,7 @@ class Notification extends Component {
     }
 
     render() {
+        // console.log(this.props.username.length);
         return (
             <View style={{ flexDirection: 'row', paddingRight: 10 }}>
                 <View style={{ height: 30, width: 60, backgroundColor: 'transparent' }}>
@@ -48,7 +58,6 @@ class Notification extends Component {
         )
     }
 }
-
 
 const styles = {
     imageStyle: {
@@ -75,4 +84,12 @@ const styles = {
     }
 }
 
-export { Notification };
+const mapStateToProps = state => {
+    const username = _.map(state.username.user_details, (val, uid) => {
+      return { ...val, uid };
+    });
+  
+    return { username };
+  }
+
+export default connect(mapStateToProps, { userFetch })(Notification);

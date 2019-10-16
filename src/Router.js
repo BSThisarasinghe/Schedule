@@ -11,7 +11,8 @@ import TaskList from './components/TaskList';
 import OpenWindow from './components/OpenWindow';
 import AddSchedule from './components/AddSchedule';
 import EditSchedule from './components/EditSchedule';
-import { Toggle, Notification } from './components/common';
+import { Toggle } from './components/common';
+import Notification from './components/common/Notification';
 import { userFetch, passwordChanged, loginUser, logOutUser } from './actions';
 
 const ThirdNavigator = createBottomTabNavigator({
@@ -62,15 +63,18 @@ const MainNavigator = createStackNavigator({
         navigationOptions: ({ navigation, username, loading }) => ({
             title: 'Your Schedule',
             headerStyle: { backgroundColor: 'rgba(82, 109, 127, 1)', height: 45 },
+            headerTitleStyle: { color: '#fff', textAlign: 'center',alignSelf:'center', flex: 1 },
             headerLeft: <Toggle navigation={navigation} />,
             headerRight: <Notification logOutUser={logOutUser()} username={username} loading={loading} />
         })
     },
     EditSchedule: {
         screen: EditSchedule,
-        navigationOptions: ({ navigation }) => ({
+        navigationOptions: ({ navigation, username, loading  }) => ({
             title: 'Edit Schedule',
             headerStyle: { backgroundColor: 'rgba(82, 109, 127, 1)', height: 45 },
+            headerTitleStyle: { color: '#fff', textAlign: 'center',alignSelf:'center', flex: 1 },
+            headerRight: <Notification logOutUser={logOutUser()} username={username} loading={loading} />
         })
     }
 });

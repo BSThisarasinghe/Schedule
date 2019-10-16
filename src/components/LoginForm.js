@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Text, BackHandler, View, Image } from 'react-native';
+import { Text, BackHandler, View, Image, KeyboardAvoidingView } from 'react-native';
 import { connect } from 'react-redux';
 import { createAppContainer } from 'react-navigation';
 import { createDrawerNavigator } from 'react-navigation-drawer';
@@ -70,39 +70,41 @@ class LoginForm extends Component {
     render() {
         return (
             <Card>
-                <View style={styles.containerStyle2}>
-                    <Image source={require('./pics/logo.png')} style={styles.imageStyle} />
-                </View>
-                <CardSection>
-                    <Input
-                        label="Email"
-                        labelStyle={{ color: '#fff' }}
-                        placeholder="email@gmail.com"
-                        placeholderTextColor="#DBDDDE"
-                        onChangeText={email => this.setState({ email })}
-                        value={this.state.email}
-                        style={{ color: '#fff' }}
-                        secureTextEntry={false}
-                    />
-                </CardSection>
-                <CardSection>
-                    <Input
-                        secureTextEntry={true}
-                        label="Password"
-                        labelStyle={{ color: '#fff' }}
-                        placeholder="Password"
-                        placeholderTextColor="#DBDDDE"
-                        onChangeText={password => this.setState({ password })}
-                        style={{ color: '#fff' }}
-                        value={this.state.password}
-                    />
-                </CardSection>
-                <Text style={styles.errorTextStyle}>
-                    {this.props.error}
-                </Text>
-                <CardSection>
-                    {this.renderButton()}
-                </CardSection>
+                <KeyboardAvoidingView behavior="padding" enabled>
+                    <View style={styles.containerStyle2}>
+                        <Image source={require('./pics/logo.png')} style={styles.imageStyle} />
+                    </View>
+                    <CardSection>
+                        <Input
+                            label="Email"
+                            labelStyle={{ color: '#fff' }}
+                            placeholder="email@gmail.com"
+                            placeholderTextColor="#DBDDDE"
+                            onChangeText={email => this.setState({ email })}
+                            value={this.state.email}
+                            style={{ color: '#fff' }}
+                            secureTextEntry={false}
+                        />
+                    </CardSection>
+                    <CardSection>
+                        <Input
+                            secureTextEntry={true}
+                            label="Password"
+                            labelStyle={{ color: '#fff' }}
+                            placeholder="Password"
+                            placeholderTextColor="#DBDDDE"
+                            onChangeText={password => this.setState({ password })}
+                            style={{ color: '#fff' }}
+                            value={this.state.password}
+                        />
+                    </CardSection>
+                    <Text style={styles.errorTextStyle}>
+                        {this.props.error}
+                    </Text>
+                    <CardSection>
+                        {this.renderButton()}
+                    </CardSection>
+                </KeyboardAvoidingView>
             </Card>
         );
     }

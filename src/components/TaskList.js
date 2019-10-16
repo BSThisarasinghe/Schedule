@@ -29,21 +29,21 @@ class TaskList extends Component {
   UNSAFE_componentWillMount() {
     this.props.scheduleFetch();
     // this.props.setReload();
-    // console.log("Hello");
+    // console.log(firebase.auth().currentUser.uid);
     this.setState({ scheduleList: this.props.schedules });
     BackHandler.addEventListener('hardwareBackPress', this.handleBackButtonClick.bind(this));
   }
 
-  componentDidMount() {
-    this.props.userFetch();
-  }
+  // componentDidMount() {
+  //   this.props.userFetch();
+  // }
 
   componentWillUnmount() {
     BackHandler.removeEventListener('hardwareBackPress', this.handleBackButtonClick.bind(this));
   }
 
   UNSAFE_componentWillReceiveProps(nextProps) {
-    this.setState({ user_name: nextProps.username[0] });
+    // this.setState({ user_name: nextProps.username[0] });
     if (firebase.auth().currentUser == null) {
       this.props.navigation.navigate('Home');
     }
@@ -94,7 +94,7 @@ class TaskList extends Component {
   }
 
   render() {
-    console.log(this.props.username[0]);
+    // console.log(this.props.username[0]);
     return (
       <View style={styles.containerStyle}>
         {this.completeView()}

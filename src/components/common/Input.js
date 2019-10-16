@@ -1,17 +1,34 @@
 import React from 'react';
 import { View, TextInput, Text } from 'react-native';
 
-const Input = ({ label, value, onChangeText, secureTextEntry, placeholder, placeholderTextColor, labelStyle, style }) => {
+const Input = ({
+    label,
+    value,
+    onChangeText,
+    secureTextEntry,
+    placeholder,
+    placeholderTextColor,
+    labelStyle,
+    style,
+    returnKeyType,
+    blurOnSubmit,
+    onSubmitEditing,
+    ref
+}) => {
     return (
         <View style={styles.containerStyle}>
-            <Text style={[styles.labelStyle,  labelStyle ]}>{label}</Text>
+            <Text style={[styles.labelStyle, labelStyle]}>{label}</Text>
             <TextInput
+                ref={ref}
                 secureTextEntry={secureTextEntry}
                 onChangeText={onChangeText}
                 value={value}
                 placeholder={placeholder}
                 placeholderTextColor={placeholderTextColor}
                 style={[styles.inputStyle, style]}
+                returnKeyType={returnKeyType}
+                blurOnSubmit={blurOnSubmit}
+                onSubmitEditing={onSubmitEditing}
             />
         </View>
     );
